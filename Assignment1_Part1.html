@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ELEC 4700 - Assignment 1 Part 1</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-03"><meta name="DC.source" content="Assignment1_Part1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>ELEC 4700 - Assignment 1 Part 1</h1><p>Andrew Paul 100996250 The prupose of this code it to model electrons in an N-type silicon semiconductor. The first part of this assignment will populate a given region with a number of electrons (note that the number of electrons is set to 20 for the purpose of the 2D simulation movie but data is provided for 10000 electrons). The thermal velocity of each electron can be calculated using the following formula:</p><p><img src="Assignment1_Part1_files/Assignment1_Part1_eq06816635083933391055.png" alt="$$v_{th}=\sqrt{\frac{2k_BT}{m_n}}$$" style="width:90px;height:35px;"></p><p>The mean time between collisions is given as 0.2ps, therefore the mean free path of the electrons can be calculated by multiplying the thermal velocity by the mean time between collisions. In this case the thermal velocity is constant as we set all the electrons to have the same velocity as the temperaure is constant at 300K. The Boltzmans constant and the value mn are listed in the constants in the code below as kB and mn respectivley. The thermal velocity was found to be 1.8697 x <img src="Assignment1_Part1_files/Assignment1_Part1_eq15193648053615409516.png" alt="$10^5$" style="width:19px;height:13px;"> m/s and the mean free path is found to be 37.394 nm. The plots of 2D electron trajectories and temperature of each electron over time are displayed after the code below.</p><pre class="codeinput"><span class="comment">% list of constants</span>
+m0 = 9.11e-31;
+mn = 0.26*m0;
+kB = 1.38e-23;
+T = 300;
+
+<span class="comment">%region limits</span>
+xlim = 200e-9;
+ylim = 100e-9;
+
+<span class="comment">%</span>
+vth = sqrt(2*kB*T/mn);
+
+<span class="comment">%initialize the number of electrons</span>
+num_electrons = 20;
+
+<span class="comment">% defining array for electrons (x postion, y position, angle, velocity)</span>
+electron = zeros(num_electrons, 4);
+
+<span class="comment">% the previous position of the electron (previous x position, previous y</span>
+<span class="comment">% position)</span>
+electron_prev = zeros(num_electrons, 2);
+
+<span class="comment">%spacial step should be smaller than 1/100 of region size</span>
+time_step = xlim/vth/100;
+time_total = time_step*500;
+<span class="comment">%num_step = time_total/time_step;</span>
+
+<span class="comment">% used to make each electron a different colour</span>
+electron_colour = hsv(num_electrons);
+
+<span class="comment">%counter used to check temperature is constant</span>
+count = 0;
+
+<span class="comment">%set an initial random postion and a fixed velocity for each electron</span>
+<span class="keyword">for</span> i=1:num_electrons
+    <span class="keyword">for</span> j=1:4
+        <span class="keyword">if</span>(j==1)
+            electron(i,j) = xlim*rand();
+        <span class="keyword">elseif</span>(j==2)
+            electron(i,j) = ylim*rand();
+        <span class="keyword">elseif</span>(j==3)
+            electron(i,j) = 2*pi*rand();
+        <span class="keyword">else</span>
+            electron(i,j) = vth;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% define a temperature and time array for plotting</span>
+temperature= zeros(time_total/time_step,1);
+time = zeros(time_total/time_step,1);
+
+running_time = 0;
+
+<span class="comment">% update each electrons positon for each time step</span>
+<span class="keyword">for</span> k=0:time_step:time_total
+    <span class="keyword">for</span> m=1:num_electrons
+        <span class="comment">% allows electrons to pass through to the other side of the region</span>
+        <span class="comment">%in the x-direction</span>
+        <span class="keyword">if</span> (electron(m,1) &gt;= xlim)
+            electron(m,1) = 0;
+            electron_prev(m,1) = 0;
+        <span class="keyword">elseif</span> (electron(m,1) &lt;= 0)
+            electron(m,1) = xlim;
+            electron_prev(m,1) = xlim;
+        <span class="keyword">end</span>
+        <span class="comment">% electrons are reflected at the same angle if they strike the limits</span>
+        <span class="comment">% of the region in the y-driection</span>
+        <span class="keyword">if</span> ((electron(m,2) &gt;= ylim) || (electron(m,2) &lt;= 0))
+            electron(m,3) = pi - electron(m,3);
+            electron(m,4) = -electron(m,4);
+        <span class="keyword">end</span>
+
+        <span class="comment">%plot the movement of each electron</span>
+        <span class="keyword">if</span>(k~=0)
+            figure(1)
+            plot([electron_prev(m,1),electron(m,1)],[electron_prev(m,2),electron(m,2)],<span class="string">'color'</span>,electron_colour(m,:))
+            axis([0 xlim 0 ylim]);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    title(<span class="string">'Electron movement'</span>)
+    xlabel(<span class="string">'x-axis position (m)'</span>)
+    ylabel(<span class="string">'y-axis position (m)'</span>)
+    hold <span class="string">on</span>
+    <span class="comment">%UNCOMMENT THE LINE BELOW TO WATCH THE MOVIE</span>
+    <span class="comment">%pause(0.001)</span>
+
+   <span class="comment">%set the previous postion of the electron to the current electron</span>
+   <span class="comment">%postion for the next itteration</span>
+   electron_prev(:,1) = electron(:,1);
+   electron_prev(:,2) = electron(:,2);
+
+   <span class="comment">% set the electron postion to an updated position</span>
+   electron(:,1) = electron(:,1) + cos(electron(:,3)).*electron(:,4).*time_step;
+   electron(:,2) = electron(:,2) + sin(electron(:,3)).*electron(:,4).*time_step;
+
+   count = count +1;
+   temperature(count,1) = (electron(1,4)^2)*mn/(2*kB);
+   time(count,1) = k + time_step;
+
+<span class="keyword">end</span>
+
+figure(2)
+plot(time,temperature)
+axis([0 time_total, 200 400])
+title(<span class="string">'Temperature of electrons over time'</span>)
+
+MFP = vth*0.2e-12;
+</pre><img vspace="5" hspace="5" src="Assignment1_Part1_files/Assignment1_Part1_01.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Assignment1_Part1_files/Assignment1_Part1_02.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Assignment1_Part1_files/Assignment1_Part1_03.png" style="width:560px;height:420px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB® R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% ELEC 4700 - Assignment 1 Part 1
+% Andrew Paul 100996250
+% The prupose of this code it to model electrons in an N-type silicon
+% semiconductor. The first part of this assignment will populate a given
+% region with a number of electrons (note that the number of electrons is
+% set to 20 for the purpose of the 2D simulation movie but data is provided
+% for 10000 electrons). 
+% The thermal velocity of each electron can be calculated using the
+% following formula:
+%
+% $$v_{th}=\sqrt{\frac{2k_BT}{m_n}}$$
+%
+% The mean time between collisions is given as 0.2ps, therefore the mean
+% free path of the electrons can be calculated by multiplying the thermal
+% velocity by the mean time between collisions. In this case the thermal
+% velocity is constant as we set all the electrons to have the same
+% velocity as the temperaure is constant at 300K. The Boltzmans constant 
+% and the value mn are listed in the constants in the code below as kB and mn respectivley.
+% The thermal velocity was found to be 1.8697 x $10^5$ m/s and the mean
+% free path is found to be 37.394 nm.
+% The plots of 2D electron trajectories and temperature of each electron over time are displayed after the code below.
+
+% list of constants
+m0 = 9.11e-31;
+mn = 0.26*m0;
+kB = 1.38e-23;
+T = 300;
+
+%region limits
+xlim = 200e-9;
+ylim = 100e-9;
+
+%
+vth = sqrt(2*kB*T/mn);
+
+%initialize the number of electrons
+num_electrons = 20;
+
+% defining array for electrons (x postion, y position, angle, velocity)
+electron = zeros(num_electrons, 4);
+
+% the previous position of the electron (previous x position, previous y
+% position)
+electron_prev = zeros(num_electrons, 2);
+
+%spacial step should be smaller than 1/100 of region size
+time_step = xlim/vth/100;
+time_total = time_step*500;
+%num_step = time_total/time_step;
+
+% used to make each electron a different colour
+electron_colour = hsv(num_electrons);
+
+%counter used to check temperature is constant
+count = 0;
+
+%set an initial random postion and a fixed velocity for each electron
+for i=1:num_electrons
+    for j=1:4
+        if(j==1)
+            electron(i,j) = xlim*rand();
+        elseif(j==2)
+            electron(i,j) = ylim*rand();
+        elseif(j==3)
+            electron(i,j) = 2*pi*rand();
+        else
+            electron(i,j) = vth;
+        end
+    end
+end
+
+% define a temperature and time array for plotting
+temperature= zeros(time_total/time_step,1);
+time = zeros(time_total/time_step,1);
+
+running_time = 0;
+
+% update each electrons positon for each time step
+for k=0:time_step:time_total
+    for m=1:num_electrons
+        % allows electrons to pass through to the other side of the region
+        %in the x-direction
+        if (electron(m,1) >= xlim)
+            electron(m,1) = 0;
+            electron_prev(m,1) = 0;
+        elseif (electron(m,1) <= 0)
+            electron(m,1) = xlim;
+            electron_prev(m,1) = xlim;
+        end
+        % electrons are reflected at the same angle if they strike the limits
+        % of the region in the y-driection
+        if ((electron(m,2) >= ylim) || (electron(m,2) <= 0))
+            electron(m,3) = pi - electron(m,3);
+            electron(m,4) = -electron(m,4);
+        end
+        
+        %plot the movement of each electron
+        if(k~=0)
+            figure(1)
+            plot([electron_prev(m,1),electron(m,1)],[electron_prev(m,2),electron(m,2)],'color',electron_colour(m,:))
+            axis([0 xlim 0 ylim]);
+        end
+    end
+    title('Electron movement')
+    xlabel('x-axis position (m)')
+    ylabel('y-axis position (m)')
+    hold on
+    %UNCOMMENT THE LINE BELOW TO WATCH THE MOVIE
+    %pause(0.001)
+    
+   %set the previous postion of the electron to the current electron
+   %postion for the next itteration
+   electron_prev(:,1) = electron(:,1);
+   electron_prev(:,2) = electron(:,2);
+   
+   % set the electron postion to an updated position
+   electron(:,1) = electron(:,1) + cos(electron(:,3)).*electron(:,4).*time_step;
+   electron(:,2) = electron(:,2) + sin(electron(:,3)).*electron(:,4).*time_step;
+   
+   count = count +1;
+   temperature(count,1) = (electron(1,4)^2)*mn/(2*kB);
+   time(count,1) = k + time_step;
+   
+end
+   
+figure(2)
+plot(time,temperature)
+axis([0 time_total, 200 400])
+title('Temperature of electrons over time')
+
+MFP = vth*0.2e-12;
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

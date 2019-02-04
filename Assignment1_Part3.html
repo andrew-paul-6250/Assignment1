@@ -1,0 +1,552 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Assignment1_Part3</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-03"><meta name="DC.source" content="Assignment1_Part3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Assignment 1 - Part 3 - Andrew Paul 100996250 - Would like the option of a meeting</a></li><li><a href="#2">Data found when populating region with 10000 electrons</a></li></ul></div><h2>Assignment 1 - Part 3 - Andrew Paul 100996250 - Would like the option of a meeting<a name="1"></a></h2><p>The final part of this assignment involves adding box boundaries to the region in whcih the electrons will reflect without loosing velocity and be reflected at the same angle as the incident angle. Again, the 2D electron trajectory plot was done with only 20 electrons and final plots of an electron density map and temperatue map of the electrons is found in a section added after the code which was simulated using 10000 electrons.</p><pre class="codeinput"><span class="comment">% list of constants</span>
+m0 = 9.11e-31;
+mn = 0.26*m0;
+kB = 1.38e-23;
+T = 300;
+
+<span class="comment">%region limits</span>
+xlim = 200e-9;
+ylim = 100e-9;
+
+<span class="comment">%</span>
+vth = sqrt(2*kB*T/mn);
+
+<span class="comment">%initialize the number of electrons</span>
+num_electrons = 20;
+
+<span class="comment">% defining array for electrons (x postion, y position, angle, velocity)</span>
+electron = zeros(num_electrons, 4);
+
+<span class="comment">% the previous position of the electron (previous x position, previous y</span>
+<span class="comment">% position)</span>
+electron_prev = zeros(num_electrons, 2);
+
+<span class="comment">%spacial step should be smaller than 1/100 of region size</span>
+time_step = xlim/vth/100;
+time_total = time_step*500;
+<span class="comment">%num_step = time_total/time_step;</span>
+
+<span class="comment">% used to make each electron a different colour</span>
+electron_colour = hsv(num_electrons);
+
+<span class="comment">% counter used to check temperature is constant</span>
+count = 0;
+
+<span class="comment">% scattering probability</span>
+Pscat = 1-exp(-time_step/0.2e-12);
+
+<span class="comment">% box dimensions</span>
+x_lower = 0.5e-7;
+x_upper = 1.5e-7;
+y_lower = 0.3e-7;
+y_upper = 0.7e-7;
+
+<span class="comment">%set an initial random postion and a fixed velocity for each electron</span>
+<span class="keyword">for</span> i=1:num_electrons
+    <span class="keyword">for</span> j=1:4
+        <span class="keyword">if</span>(j==1)
+            electron(i,j) = xlim*rand();
+        <span class="keyword">elseif</span>(j==2)
+            electron(i,j) = ylim*rand();
+        <span class="keyword">while</span>((electron(i,1) &gt;= x_lower &amp;&amp; electron(i,1) &lt;= x_upper &amp;&amp; electron(i,2) &lt;= y_lower) || (electron(i,1) &gt;= x_lower &amp;&amp; electron(i,1) &lt;= x_upper &amp;&amp; electron(i,2) &gt;= y_upper))
+            electron(i,j) = xlim*rand();
+             electron(i,j) = ylim*rand();
+        <span class="keyword">end</span>
+        <span class="keyword">elseif</span>(j==3)
+            electron(i,j) = 2*pi*rand();
+        <span class="keyword">else</span>
+            electron(i,j) = randn()*vth;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%Histogram commented out</span>
+<span class="comment">%{
+</span><span class="comment">figure(3)
+</span><span class="comment">hist(electron(:,4))
+</span><span class="comment">title('Velocity Distribution')
+</span><span class="comment">%}
+</span>
+<span class="comment">% define a temperature and time array for plotting</span>
+temperature= zeros(time_total/time_step,1);
+time = zeros(time_total/time_step,1);
+
+<span class="comment">% counter for mean collision time</span>
+collision_count = 0;
+
+running_time = 0;
+
+<span class="comment">% velocity array used to calculated mean free path</span>
+velocity = zeros(time_total/time_step,1);
+
+<span class="comment">% update each electrons positon for each time step</span>
+<span class="keyword">for</span> k=0:time_step:time_total
+    avg_temp = 0;
+    avg_velocity = 0;
+    <span class="keyword">for</span> m=1:num_electrons
+        <span class="comment">% allows electrons to pass through to the other side of the region</span>
+        <span class="comment">%in the x-direction</span>
+        <span class="keyword">if</span> (electron(m,1) &gt;= xlim)
+            electron(m,1) = 0;
+            electron_prev(m,1) = 0;
+        <span class="keyword">elseif</span> (electron(m,1) &lt;= 0)
+            electron(m,1) = xlim;
+            electron_prev(m,1) = xlim;
+        <span class="keyword">end</span>
+        <span class="comment">% electrons are reflected at the same angle if they strike the limits</span>
+        <span class="comment">% of the region in the y-driection</span>
+        <span class="keyword">if</span> ((electron(m,2) &gt;= ylim) || (electron(m,2) &lt;= 0))
+            electron(m,3) = pi - electron(m,3);
+            electron(m,4) = -electron(m,4);
+        <span class="keyword">end</span>
+
+        <span class="comment">% boundary conditions when interacting with the boxes</span>
+        <span class="keyword">if</span>(electron(m,1) &lt;= x_lower &amp;&amp; (electron(m,2) &lt;= y_lower || electron(m,2) &gt;= y_upper))
+            <span class="keyword">if</span>((electron(m,1)+electron(m,4)*cos(electron(m,3))*time_step) &gt;= x_lower)
+                electron(m,3) = - electron(m,3);
+                electron(m,4) = - electron(m,4);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+        <span class="keyword">if</span>(electron(m,1) &gt;= x_upper &amp;&amp; (electron(m,2) &lt;= y_lower || electron(m,2) &gt;= y_upper))
+             <span class="keyword">if</span>((electron(m,1)+electron(m,4)*cos(electron(m,3))*time_step) &lt;= x_upper)
+                electron(m,3) = - electron(m,3);
+                electron(m,4) = - electron(m,4);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+        <span class="keyword">if</span>((electron(m,1) &gt;= x_lower &amp;&amp; electron(m,1) &lt;= x_upper) &amp;&amp; (electron(m,2) &gt;= y_lower &amp;&amp; electron(m,2) &lt;= y_upper))
+            <span class="keyword">if</span>(((electron(m,2)+electron(m,4)*sin(electron(m,3))*time_step) &gt;= y_upper) || ((electron(m,2)+electron(m,4)*sin(electron(m,3))*time_step) &lt;= y_lower))
+                electron(m,3) = pi - electron(m,3);
+                electron(m,4) = - electron(m,4);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+        <span class="comment">% see if the particle scatters or not</span>
+        <span class="keyword">if</span>(Pscat &gt; rand())
+            <span class="comment">% scatters at a random angle</span>
+            electron(m,3) = 2*pi*rand();
+            <span class="comment">% new velocity for scattering - gaussian with some</span>
+            <span class="comment">% MAXWELL-BOLTZMAN standard deviation</span>
+            vx_new = randn()*vth;
+            vy_new = randn()*vth;
+            v_new = sqrt(vx_new^2+vy_new^2);
+            electron(m,4) = v_new;
+            collision_count =+ 1;
+        <span class="keyword">end</span>
+
+        avg_temp = avg_temp + (electron(m,4)^2)*mn/(2*kB);
+        avg_velocity = avg_velocity + electron(m,4);
+
+        <span class="comment">%plot the movement of each electron</span>
+        <span class="keyword">if</span>(k~=0)
+            figure(1)
+            plot([electron_prev(m,1),electron(m,1)],[electron_prev(m,2),electron(m,2)],<span class="string">'color'</span>,electron_colour(m,:))
+            axis([0 xlim 0 ylim]);
+            rectangle(<span class="string">'Position'</span>,[x_lower 0 (x_upper-x_lower) y_lower])
+            rectangle(<span class="string">'Position'</span>,[x_lower y_upper (x_upper-x_lower) ylim])
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    title(<span class="string">'Electron movement'</span>)
+    xlabel(<span class="string">'x-axis position (m)'</span>)
+    ylabel(<span class="string">'y-axis position (m)'</span>)
+    hold <span class="string">on</span>
+    pause(0.001)
+
+   <span class="comment">% set the previous postion of the electron to the current electron</span>
+   <span class="comment">%postion for the next itteration</span>
+   electron_prev(:,1) = electron(:,1);
+   electron_prev(:,2) = electron(:,2);
+
+   <span class="comment">% set the electron postion to an updated position</span>
+   electron(:,1) = electron(:,1) + cos(electron(:,3)).*electron(:,4).*time_step;
+   electron(:,2) = electron(:,2) + sin(electron(:,3)).*electron(:,4).*time_step;
+
+   count = count +1;
+   temperature(count,1) = avg_temp/num_electrons;
+   time(count,1) = k + time_step;
+   velocity(count,1) = avg_velocity;
+
+<span class="keyword">end</span>
+
+mean_collision = time_total/collision_count;
+avg_vth = 0;
+<span class="keyword">for</span> n=1:500
+    avg_vth =+ velocity(n,1);
+<span class="keyword">end</span>
+avg_vth = avg_vth/size(velocity,1);
+
+MFP = avg_vth*mean_collision;
+
+electron_grid = zeros(100,100);
+temperature_grid = zeros(100,100);
+
+<span class="comment">% create density regions with grid vectors of final temperature and</span>
+<span class="comment">%electron position</span>
+<span class="keyword">for</span> x_pos=1:100
+    <span class="keyword">for</span> y_pos=1:100
+        <span class="keyword">for</span> q = 1:num_electrons
+            <span class="keyword">if</span>((electron(q,1) &lt;= (xlim*(x_pos/100))) &amp;&amp; (electron(q,1) &gt; (xlim*((x_pos-1)/100))) &amp;&amp; (electron(q,2) &lt;= (ylim*(y_pos/100))) &amp;&amp; (electron(q,2) &gt; (ylim*((y_pos-1)/100))))
+                electron_grid(x_pos,y_pos) =+ 1;
+                temperature_grid(x_pos,y_pos) =+ (electron(q,4)^2)*mn/(2*kB);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%Temperature plot over time commented out</span>
+<span class="comment">%{
+</span><span class="comment">figure(2)
+</span><span class="comment">plot(time,temperature)
+</span><span class="comment">axis([0 time_total, 0 1100])
+</span><span class="comment">title('Temperature of electrons over time')
+</span><span class="comment">%}
+</span>
+figure(4)
+surf(electron_grid)
+colorbar
+title(<span class="string">'Electron Density Map'</span>)
+xlabel(<span class="string">'x-axis position (m)'</span>)
+ylabel(<span class="string">'y-axis position (m)'</span>)
+shading <span class="string">interp</span>
+
+figure(5)
+surf(temperature_grid)
+colorbar
+title(<span class="string">'Temperature Map'</span>)
+xlabel(<span class="string">'x-axis position (m)'</span>)
+ylabel(<span class="string">'y-axis position (m)'</span>)
+shading <span class="string">interp</span>
+</pre><img vspace="5" hspace="5" src="Assignment1_Part3_01.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Assignment1_Part3_02.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Assignment1_Part3_03.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="Assignment1_Part3_04.png" style="width:560px;height:420px;" alt=""> <h2>Data found when populating region with 10000 electrons<a name="2"></a></h2><p>The plots below display 2D density maps of the electron density and temperature of the electrons in their final positions once the simulation is finished. It is clear from these plots that a few electrons have leaked into the boxes, this is likely due to an electron scattering and getting assigned a very larger velocity in which it enters the box before the boundary conditions can asseess that it is in a forbidden region. For now it can be considered as some probability of quantum tunneling! Pretty neat accidental feauture.</p><p><img vspace="5" hspace="5" src="electron_map_part3.jpg" alt=""> </p><p>It can be noted that when rotating the surface plot the axis labels shifted and are difficult to see.</p><p><img vspace="5" hspace="5" src="Temp_map_part3.jpg" alt=""> </p><p>It can be noted that when rotating the surface plot the axis labels shifted and are difficult to see.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Assignment 1 - Part 3 - Andrew Paul 100996250 - Would like the option of a meeting
+% The final part of this assignment involves adding box boundaries to the
+% region in whcih the electrons will reflect without loosing velocity and
+% be reflected at the same angle as the incident angle. Again, the 2D
+% electron trajectory plot was done with only 20 electrons and final plots
+% of an electron density map and temperatue map of the electrons is found
+% in a section added after the code which was simulated using 10000
+% electrons.
+
+
+% list of constants
+m0 = 9.11e-31;
+mn = 0.26*m0;
+kB = 1.38e-23;
+T = 300;
+
+%region limits
+xlim = 200e-9;
+ylim = 100e-9;
+
+%
+vth = sqrt(2*kB*T/mn);
+
+%initialize the number of electrons
+num_electrons = 20;
+
+% defining array for electrons (x postion, y position, angle, velocity)
+electron = zeros(num_electrons, 4);
+
+% the previous position of the electron (previous x position, previous y
+% position)
+electron_prev = zeros(num_electrons, 2);
+
+%spacial step should be smaller than 1/100 of region size
+time_step = xlim/vth/100;
+time_total = time_step*500;
+%num_step = time_total/time_step;
+
+% used to make each electron a different colour
+electron_colour = hsv(num_electrons);
+
+% counter used to check temperature is constant
+count = 0;
+
+% scattering probability
+Pscat = 1-exp(-time_step/0.2e-12);
+
+% box dimensions
+x_lower = 0.5e-7;
+x_upper = 1.5e-7;
+y_lower = 0.3e-7;
+y_upper = 0.7e-7;
+
+%set an initial random postion and a fixed velocity for each electron
+for i=1:num_electrons
+    for j=1:4
+        if(j==1)
+            electron(i,j) = xlim*rand();
+        elseif(j==2)
+            electron(i,j) = ylim*rand();
+        while((electron(i,1) >= x_lower && electron(i,1) <= x_upper && electron(i,2) <= y_lower) || (electron(i,1) >= x_lower && electron(i,1) <= x_upper && electron(i,2) >= y_upper))
+            electron(i,j) = xlim*rand();
+             electron(i,j) = ylim*rand();
+        end
+        elseif(j==3)
+            electron(i,j) = 2*pi*rand();
+        else
+            electron(i,j) = randn()*vth;
+        end
+    end
+end
+
+%Histogram commented out
+%{
+figure(3)
+hist(electron(:,4))
+title('Velocity Distribution')
+%}
+
+% define a temperature and time array for plotting
+temperature= zeros(time_total/time_step,1);
+time = zeros(time_total/time_step,1);
+
+% counter for mean collision time
+collision_count = 0;
+
+running_time = 0;
+
+% velocity array used to calculated mean free path
+velocity = zeros(time_total/time_step,1);
+
+% update each electrons positon for each time step
+for k=0:time_step:time_total
+    avg_temp = 0;
+    avg_velocity = 0;
+    for m=1:num_electrons
+        % allows electrons to pass through to the other side of the region
+        %in the x-direction
+        if (electron(m,1) >= xlim)
+            electron(m,1) = 0;
+            electron_prev(m,1) = 0;
+        elseif (electron(m,1) <= 0)
+            electron(m,1) = xlim;
+            electron_prev(m,1) = xlim;
+        end
+        % electrons are reflected at the same angle if they strike the limits
+        % of the region in the y-driection
+        if ((electron(m,2) >= ylim) || (electron(m,2) <= 0))
+            electron(m,3) = pi - electron(m,3);
+            electron(m,4) = -electron(m,4);
+        end
+        
+        % boundary conditions when interacting with the boxes
+        if(electron(m,1) <= x_lower && (electron(m,2) <= y_lower || electron(m,2) >= y_upper))
+            if((electron(m,1)+electron(m,4)*cos(electron(m,3))*time_step) >= x_lower)
+                electron(m,3) = - electron(m,3);
+                electron(m,4) = - electron(m,4);
+            end
+        end
+        
+        if(electron(m,1) >= x_upper && (electron(m,2) <= y_lower || electron(m,2) >= y_upper))
+             if((electron(m,1)+electron(m,4)*cos(electron(m,3))*time_step) <= x_upper)
+                electron(m,3) = - electron(m,3);
+                electron(m,4) = - electron(m,4);
+            end
+        end
+        
+        if((electron(m,1) >= x_lower && electron(m,1) <= x_upper) && (electron(m,2) >= y_lower && electron(m,2) <= y_upper))
+            if(((electron(m,2)+electron(m,4)*sin(electron(m,3))*time_step) >= y_upper) || ((electron(m,2)+electron(m,4)*sin(electron(m,3))*time_step) <= y_lower))
+                electron(m,3) = pi - electron(m,3);
+                electron(m,4) = - electron(m,4);
+            end
+        end
+       
+        % see if the particle scatters or not
+        if(Pscat > rand())
+            % scatters at a random angle
+            electron(m,3) = 2*pi*rand();
+            % new velocity for scattering - gaussian with some
+            % MAXWELL-BOLTZMAN standard deviation
+            vx_new = randn()*vth;
+            vy_new = randn()*vth;
+            v_new = sqrt(vx_new^2+vy_new^2);
+            electron(m,4) = v_new;
+            collision_count =+ 1;
+        end
+        
+        avg_temp = avg_temp + (electron(m,4)^2)*mn/(2*kB);
+        avg_velocity = avg_velocity + electron(m,4);
+        
+        %plot the movement of each electron
+        if(k~=0)
+            figure(1)
+            plot([electron_prev(m,1),electron(m,1)],[electron_prev(m,2),electron(m,2)],'color',electron_colour(m,:))
+            axis([0 xlim 0 ylim]);
+            rectangle('Position',[x_lower 0 (x_upper-x_lower) y_lower])
+            rectangle('Position',[x_lower y_upper (x_upper-x_lower) ylim])
+        end
+    end
+
+    title('Electron movement')
+    xlabel('x-axis position (m)')
+    ylabel('y-axis position (m)')
+    hold on
+    pause(0.001)
+
+   % set the previous postion of the electron to the current electron
+   %postion for the next itteration
+   electron_prev(:,1) = electron(:,1);
+   electron_prev(:,2) = electron(:,2);
+   
+   % set the electron postion to an updated position
+   electron(:,1) = electron(:,1) + cos(electron(:,3)).*electron(:,4).*time_step;
+   electron(:,2) = electron(:,2) + sin(electron(:,3)).*electron(:,4).*time_step;
+   
+   count = count +1;
+   temperature(count,1) = avg_temp/num_electrons;
+   time(count,1) = k + time_step;
+   velocity(count,1) = avg_velocity;
+   
+end
+
+mean_collision = time_total/collision_count;
+avg_vth = 0;
+for n=1:500
+    avg_vth =+ velocity(n,1);
+end
+avg_vth = avg_vth/size(velocity,1);
+
+MFP = avg_vth*mean_collision;
+
+electron_grid = zeros(100,100);
+temperature_grid = zeros(100,100);
+
+% create density regions with grid vectors of final temperature and
+%electron position
+for x_pos=1:100
+    for y_pos=1:100
+        for q = 1:num_electrons
+            if((electron(q,1) <= (xlim*(x_pos/100))) && (electron(q,1) > (xlim*((x_pos-1)/100))) && (electron(q,2) <= (ylim*(y_pos/100))) && (electron(q,2) > (ylim*((y_pos-1)/100))))
+                electron_grid(x_pos,y_pos) =+ 1;
+                temperature_grid(x_pos,y_pos) =+ (electron(q,4)^2)*mn/(2*kB);
+            end
+        end
+    end
+end
+
+%Temperature plot over time commented out
+%{  
+figure(2)
+plot(time,temperature)
+axis([0 time_total, 0 1100])
+title('Temperature of electrons over time')
+%}
+
+figure(4)
+surf(electron_grid)
+colorbar
+title('Electron Density Map')
+xlabel('x-axis position (m)')
+ylabel('y-axis position (m)')
+shading interp
+
+figure(5)
+surf(temperature_grid)
+colorbar
+title('Temperature Map')
+xlabel('x-axis position (m)')
+ylabel('y-axis position (m)')
+shading interp
+
+%% Data found when populating region with 10000 electrons
+% The plots below display 2D density maps of the electron density and
+% temperature of the electrons in their final positions once the simulation
+% is finished. It is clear from these plots that a few electrons have
+% leaked into the boxes, this is likely due to an electron scattering and
+% getting assigned a very larger velocity in which it enters the box before
+% the boundary conditions can asseess that it is in a forbidden region. For
+% now it can be considered as some probability of quantum tunneling! Pretty
+% neat accidental feauture.
+
+%%
+% 
+% <<electron_map_part3.jpg>>
+%
+% It can be noted that when rotating the surface plot the axis labels
+% shifted and are difficult to see.
+
+%%
+% 
+% <<Temp_map_part3.jpg>>
+%
+% It can be noted that when rotating the surface plot the axis labels
+% shifted and are difficult to see.
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
